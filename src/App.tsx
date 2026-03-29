@@ -1,26 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
+import Header from './components/Header';
+import TariffsPage from './pages/TariffsPage';
 
-function App() {
+const INITIAL_SECONDS = 2 * 60;
+
+const App: React.FC = () => {
+  const [seconds, setSeconds] = useState(INITIAL_SECONDS);
+
+  useEffect(() => {
+    if (seconds <= 0) return;
+    const interval = setInterval(() => {
+      setSeconds(prev => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [seconds]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Header seconds={seconds} />
+      <div className="pt-20 pb-20 bg-[#1C1E1C] max-[430px]:pt-[20px] max-[430px]:pb-[20px] max-[320px]:pt-2 max-[320px]:pb-2">
+        <TariffsPage discountActive={seconds > 0} />
+      </div>
+    </>
   );
-}
+};
 
 export default App;
